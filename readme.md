@@ -1,10 +1,14 @@
 # Software Planner
 
+## Summary
+
+This is an application that will allow users to easily design and generate software application skeletons. It will be built off of a DSL that will allow generation without the use of the UI if desired by the user.
+
 ## Software Planner Transpiler
 
 ### Goal
 
-Transpile DSL inot other language projects.
+Transpile DSL into other language projects.
 
 ### DSL
 
