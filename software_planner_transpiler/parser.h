@@ -12,7 +12,24 @@ public:
 
 	ASTNode* parse() {
 		//Parser logic here
-		return new ASTNode("test");
+		if (tokens.empty()) {
+			return nullptr;
+		}
+
+		ASTNode* root = ASTNode(tokens[0].type);
+
+		for (const auto& token : tokens) {
+			ASTNode* node = new ASTNode(token.type);
+
+			//remove 1st node because that will be your root node
+			//loop through tokens and split tokens vector when token count decreases
+			//each split will contain tokens that belong to the tree under one of the children of the root node
+			//may have to recursively process tokens going 1 tab deeper each recursion
+
+			root->addChild(node);
+		}
+
+		return new ASTNode(root);
 	}
 
 private:

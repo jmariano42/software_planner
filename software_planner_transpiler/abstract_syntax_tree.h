@@ -6,13 +6,14 @@
 
 class ASTNode {
 public:
-	ASTNode(const std::string& type) : type(type) {}
+	ASTNode(const TokenType& type) : type(type) {}
 
 	void addChild(ASTNode* child) {
 		children.push_back(child);
 	}
 
-	std::string type;
+	TokenType type;
+	Token token;
 	std::vector<ASTNode*> children;
 };
 
