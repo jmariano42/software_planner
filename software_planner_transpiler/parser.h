@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #include <iostream>
+#include <unordered_map>
 #include <vector>
 #include "abstract_syntax_tree.h"
 #include "token.h"
@@ -11,25 +12,34 @@ public:
 	Parser(const std::vector<Token>& tokens) : tokens(tokens) {}
 
 	ASTNode* parse() {
-		//Parser logic here
-		if (tokens.empty()) {
-			return nullptr;
+		ASTNode* root = new ASTNode(tokens[0].type, tokens[0]);
+		tokens.erase(tokens.begin());
+
+		std::unordered_map<uint8_t, ASTNode*>* lastNodes = new std::unordered_map<uint8_t, ASTNode*>();
+		lastNodes->insert_or_assign(root->token.tabs, root);
+
+		determineTokenGroups(lastNodes, tokens, 1);
+
+		return root;
+	}
+
+	void determineTokenGroups(std::unordered_map<uint8_t, ASTNode*>* lastNodes, std::vector<Token> tokens, std::uint8_t count) {
+		std::vector<Token> carryTokens = tokens;
+
+		for (Token token : tokens) {
+			if (token.tabs == count) {
+				ASTNode* node = new ASTNode(token.type, token);
+				uint8_t parentCount = count - 1;
+				lastNodes->at(parentCount)->addChild(node);
+				carryTokens.erase(carryTokens.begin());
+				lastNodes->insert_or_assign(count, node);
+			}
+			else {
+				count = token.tabs;
+				determineTokenGroups(lastNodes, carryTokens, count);
+				return;
+			}
 		}
-
-		ASTNode* root = ASTNode(tokens[0].type);
-
-		for (const auto& token : tokens) {
-			ASTNode* node = new ASTNode(token.type);
-
-			//remove 1st node because that will be your root node
-			//loop through tokens and split tokens vector when token count decreases
-			//each split will contain tokens that belong to the tree under one of the children of the root node
-			//may have to recursively process tokens going 1 tab deeper each recursion
-
-			root->addChild(node);
-		}
-
-		return new ASTNode(root);
 	}
 
 private:
