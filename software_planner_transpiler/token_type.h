@@ -12,7 +12,9 @@ enum TokenType {
 	Method = 8,
 	Property = 9,
 	Reference = 10,
-	Using = 10
+	Using = 11,
+	CSharpSolution = 12,
+	CSharpProject = 13
 };
 
 #endif

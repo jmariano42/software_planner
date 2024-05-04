@@ -1,7 +1,4 @@
-﻿// software_planner_transpiler.cpp : Defines the entry point for the application.
-//
-
-#include "abstract_syntax_tree.h"
+﻿#include "abstract_syntax_tree.h"
 #include "code_generator.h"
 #include "lexer.h"
 #include "parser.h"

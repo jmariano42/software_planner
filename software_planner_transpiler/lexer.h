@@ -44,7 +44,7 @@ public:
 					token.modifier = toModifier(word);
 				} else if (isScope(word)) {
 					token.scope = toScope(word);
-				} else if (isToken(word)) {
+				} else if (isType(word)) {
 					token.type = toType(word);
 				} else if (isDataType(word)) {
 					token.dataType = toDataType(word);
@@ -102,14 +102,14 @@ public:
 		return ret;
 	}
 
-	bool isToken(std::string& input) {
+	bool isType(std::string& input) {
 		bool ret = false;
 
 		std::string str = input;
 
 		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
 
-		if (str == "CLASS" || str == "COTR" || str == "DIR" || str == "FIELD" || str == "FILE" || str == "INC" || str == "METD" || str == "PROP" || str == "REF" || str == "USE") {
+		if (str == "CLASS" || str == "COTR" || str == "DIR" || str == "FIELD" || str == "FILE" || str == "INC" || str == "METD" || str == "PROP" || str == "REF" || str == "USE" || str == "CSSLN" || str == "CSPROJ") {
 			ret = true;
 		}
 
@@ -231,6 +231,10 @@ public:
 			tokenType = Reference;
 		} else if (str == "USE") {
 			tokenType = Using;
+		} else if (str == "CSSLN") {
+			tokenType = CSharpSolution;
+		} else if (str == "CSPROJ") {
+			tokenType = CSharpProject;
 		}
 
 		return tokenType;
