@@ -22,7 +22,7 @@ Tabs signify that the line above with a lower tab count contains this line
 - COTR: Constructor
 - DIR: Directory
 - FIELD: Field
-- FILE %extension%: File
+- FILE: File
 - INC: Include
 - METD: Method
 - PROP: Property

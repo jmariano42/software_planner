@@ -4,11 +4,12 @@ DIR INFODDYNAMICS.Web.Suite
 		DIR INFODYNAMICS.Core
 			CSPROJ INFODYNAMICS.Core
 			DIR Classes
-				CS CLASS public Document
-					CS FIELD private int _id
-					CS PROP public int Id _id
-					CS COTR public int id
-					CS METD public void Save
+				FILE Document.cs
+					CS CLASS public Document
+						CS FIELD private int _id
+						CS PROP public int Id _id
+						CS COTR public int id
+						CS METD public void Save
 		DIR INFODYNAMICS.Image.Conversion
 			CSPROJ INFODYNAMICS.Image.Conversion
 		DIR INFODYNAMICS.Logging
