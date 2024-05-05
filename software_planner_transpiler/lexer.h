@@ -49,7 +49,11 @@ public:
 				} else if (isDataType(word)) {
 					token.dataType = toDataType(word);
 				} else {
-					token.value = word;
+					if (token.value.empty()) {
+						token.value = word;
+					} else {
+						token.field = word;
+					}
 				}
 			}
 
