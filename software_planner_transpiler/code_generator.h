@@ -51,7 +51,7 @@ public:
 		}
 	}
 
-	std::filesystem::path createPath(ASTNode* node, std::unordered_map<uint8_t, ASTNode*>* lastNodes) {
+	std::filesystem::path createPath(ASTNode* node, std::unordered_map<uint8_t, ASTNode*>* lastNodes, bool addFilename = true) {
 		//todo: make this configurable or a param in cli
 		std::filesystem::path basePath = "C:\\Development\\software_planner\\test\\out";
 		std::filesystem::path path = basePath;
@@ -68,17 +68,21 @@ public:
 
 		std::filesystem::path currentNodePath;
 
-		if (isSpecialFile(node))
-		{
-			if (node->type == CSharpSolution) {
-				currentNodePath = node->token.value + ".sln";
-			} else if (node->type == CSharpProject) {
-				currentNodePath = node->token.value + ".csproj";
+		if (addFilename) {
+			if (isSpecialFile(node))
+			{
+				if (node->type == CSharpSolution) {
+					currentNodePath = node->token.value + ".sln";
+				}
+				else if (node->type == CSharpProject) {
+					currentNodePath = node->token.value + ".csproj";
+				}
 			}
-		} else {
-			currentNodePath = node->token.value;
+			else {
+				currentNodePath = node->token.value;
+			}
 		}
-
+		
 		path = path / currentNodePath;
 
 		return path;
@@ -95,75 +99,26 @@ public:
 	}
 
 	void createSpecialFile(std::filesystem::path path, ASTNode* node, std::unordered_map<uint8_t, ASTNode*>* lastNodes) {
-		std::ofstream file(path);
+		if (node->type == CSharpSolution) {
 
-		if (file.is_open()) {
-			if (node->type == CSharpSolution) {
-				file << "Microsoft Visual Studio Solution File, Format Version 12.00\n";
-				file << "# Visual Studio Version 17\n";
-				file << "VisualStudioVersion = 17.9.34728.123\n";
-				file << "MinimumVisualStudioVersion = 10.0.40219.1\n";
+			std::filesystem::path path = createPath(node, lastNodes, false);
+			std::string stringPath = path.string();
+			std::string command = "dotnet new sln -n " + node->token.value + " -o " + stringPath;
+			system(command.c_str());
+		}
+		else if (node->type == CSharpProject) {
+			std::filesystem::path path = createPath(node, lastNodes, false);
+			std::string stringPath = path.string();
+			std::string cdCommand = "cd " + stringPath + "&&";
 
-				uint8_t parentTabCount = node->token.tabs - 1;
-				ASTNode* parentNode = lastNodes->at(parentTabCount); 
+			std::string createCommand = "dotnet new console -n " + node->token.value + "&&";
 
-				for (ASTNode* sibling : parentNode->children) {
-					if (sibling == node) {
-						continue;
-					}
+			std::string fileName = node->token.value + ".csproj";
+			std::string addCommand = "dotnet sln add ./" + node->token.value + "/" + fileName;
 
-					for (ASTNode* child : sibling->children) {
-						if (child->type == CSharpProject) {
-							std::string guid1 = generateGuid();
-							std::string guid2 = generateGuid();
+			std::string combindedCommands = cdCommand + createCommand + addCommand;
 
-							file << "Project(\"{" + guid1 + "}\") = " + child->token.value + ", \"" + child->token.value + "\\" + child->token.value + "\\" + child->token.value + ".csproj\", \"{" + guid2 + "}\"\n";
-							file << "EndProject\n";
-						}
-					}
-				}
-
-				file << "Global\n";
-				file << "\tGlobalSection(SolutionConfigurationPlatforms) = preSolution\n";
-				file << "\t\tDebug|Any CPU = Debug|Any CPU\n";
-				file << "\t\tRelease|Any CPU = Release|Any CPU\n";
-				file << "\tEndGlobalSection\n";
-				file << "\tGlobalSection(ProjectConfigurationPlatforms) = postSolution\n";
-
-				for (ASTNode* sibling : parentNode->children) {
-					if (sibling == node) {
-						continue;
-					}
-
-					for (ASTNode* child : sibling->children) {
-						if (child->type == CSharpProject) {
-							std::string guid = generateGuid();
-
-							file << "\t\t{" + guid + "}.Debug|Any CPU.ActiveCfg = Debug|Any CPU\n";
-							file << "\t\t{" + guid + "}.Debug|Any CPU.Build.0 = Debug|Any CPU\n";
-							file << "\t\t{" + guid + "}.Release|Any CPU.ActiveCfg = Release|Any CPU\n";
-							file << "\t\t{" + guid + "}.Release|Any CPU.Build.0 = Release|Any CPU\n";
-						}
-					}
-				}
-
-				file << "\tEndGlobalSection\n";
-				file << "\tGlobalSection(ExtensibilityGlobals) = postSolution\n";
-
-				std::string guid = generateGuid();
-
-				file << "\t\tSolutionGuid = {" + guid + "}\n";
-				file << "\tEndGlobalSolution\n";
-				file << "EndGlobal\n";
-			}
-			else if (node->type == CSharpProject) {
-				file << "<Project Sdk=\"Microsoft.NET.Sdk\"\n";
-				file << "\t<PropertyGroup>\n";
-				file << "\t\t<OutputType>Exe</OutputType>\n";
-				file << "\t\t<TargetFramework>net8.0</TargetFramework>\n";
-				file << "\t</PropertyGroup>\n";
-				file << "</Project>\n";
-			}
+			system(combindedCommands.c_str());
 		}
 	}
 

@@ -1,8 +1,7 @@
 DIR INFODDYNAMICS.Web.Suite
 	DIR INFODYNAMICS.Shared.Libraries
 		CSSLN INFODYNAMICS.Shared.Libraries
-		DIR INFODYNAMICS.Core
-			CSPROJ INFODYNAMICS.Core
+		CSPROJ INFODYNAMICS.Core
 			DIR Classes
 				FILE Document.cs
 					CS CLASS public Document
@@ -10,9 +9,6 @@ DIR INFODDYNAMICS.Web.Suite
 						CS PROP public int Id _id
 						CS COTR public int id
 						CS METD public void Save
-		DIR INFODYNAMICS.Image.Conversion
-			CSPROJ INFODYNAMICS.Image.Conversion
-		DIR INFODYNAMICS.Logging
-			CSPROJ INFODYNAMICS.Logging
-		DIR INFODYNAMICS.Settings
-			CSPROJ INFODYNAMICS.Settings
+		CSPROJ INFODYNAMICS.Image.Conversion
+		CSPROJ INFODYNAMICS.Logging
+		CSPROJ INFODYNAMICS.Settings
