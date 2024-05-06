@@ -171,7 +171,7 @@ public:
 				ASTNode* grandParentNode = lastNodes->at(grandParentTabCount);
 
 				std::string fileNamespace = createNamespace(grandParentNode, lastNodes);
-				file << "namespace " + fileNamespace + "\n";
+				file << "namespace " + fileNamespace + " {\n";
 
 				if (node->token.scope == Private) {
 					file << "\tprivate class " + node->token.value + "\n";
@@ -194,11 +194,11 @@ public:
 				std::string dataType = dataTypeToCSharpString(node);
 
 				if (node->token.scope == Private) {
-					file << "\t\tprivate " + dataType + ' ' + node->token.value + "\n";
+					file << "\t\tprivate " + dataType + ' ' + node->token.value + ";\n";
 				} else if (node->token.scope == Protected) {
-					file << "\t\tprotected " + dataType + ' ' + node->token.value + "\n";
+					file << "\t\tprotected " + dataType + ' ' + node->token.value + ";\n";
 				} else if (node->token.scope == Public) {
-					file << "\t\tpublic " + dataType + ' ' + node->token.value + "\n";
+					file << "\t\tpublic " + dataType + ' ' + node->token.value + ";\n";
 				}
 			}
 		} else if (node->type == Property) {
@@ -223,13 +223,13 @@ public:
 				std::string dataType = dataTypeToCSharpString(node);
 
 				if (node->token.scope == Private) {
-					file << "\t\tprivate " + parentNode->token.value + "(" + dataType + ' ' + node->token.value + ")\n";
+					file << "\t\tprivate " + parentNode->token.value + "(" + dataType + ' ' + node->token.value + ") {}\n";
 				}
 				else if (node->token.scope == Protected) {
-					file << "\t\tprotected " + parentNode->token.value + "(" + dataType + ' ' + node->token.value + ")\n";
+					file << "\t\tprotected " + parentNode->token.value + "(" + dataType + ' ' + node->token.value + ") {}\n";
 				}
 				else if (node->token.scope == Public) {
-					file << "\t\tpublic " + parentNode->token.value + "(" + dataType + ' ' + node->token.value + ")\n";
+					file << "\t\tpublic " + parentNode->token.value + "(" + dataType + ' ' + node->token.value + ") {}\n";
 				}
 			}
 		} else if (node->type == Method) {
@@ -237,13 +237,13 @@ public:
 				std::string dataType = dataTypeToCSharpString(node);
 
 				if (node->token.scope == Private) {
-					file << "\t\tprivate " + dataType + ' ' + node->token.value + "()\n";
+					file << "\t\tprivate " + dataType + ' ' + node->token.value + "() {}\n";
 				}
 				else if (node->token.scope == Protected) {
-					file << "\t\tprotected " + dataType + ' ' + node->token.value + "()\n";
+					file << "\t\tprotected " + dataType + ' ' + node->token.value + "() {}\n";
 				}
 				else if (node->token.scope == Public) {
-					file << "\t\tpublic " + dataType + ' ' + node->token.value + "()\n";
+					file << "\t\tpublic " + dataType + ' ' + node->token.value + "() {}\n";
 				}
 			}
 		}
@@ -268,26 +268,15 @@ public:
 	std::string createNamespace(ASTNode* node, std::unordered_map<uint8_t, ASTNode*>* lastNodes) {
 		std::string fileNamespace;
 
-		for (auto it = lastNodes->begin(); it != lastNodes->end(); it++) {
-			if (it->second == node || it->first > node->token.tabs) {
-				continue;
+		uint8_t counter = node->token.tabs;
+
+		while (counter > 0) {
+			if (lastNodes->at(counter)->type == CSharpProject) {
+				fileNamespace = lastNodes->at(counter)->token.value;
+				break;
 			}
 
-			std::string lastNodeNamespace = it->second->token.value;
-
-			if (fileNamespace.empty()) {
-				fileNamespace = lastNodeNamespace;
-			} else {
-				fileNamespace = fileNamespace + "." + lastNodeNamespace;
-			}
-		}
-
-		std::string currentNodeNamespace = node->token.value;
-
-		if (fileNamespace.empty()) {
-			fileNamespace = currentNodeNamespace;
-		} else {
-			fileNamespace = fileNamespace + "." + currentNodeNamespace;
+			counter--;
 		}
 
 		return fileNamespace;
