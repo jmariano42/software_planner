@@ -52,7 +52,7 @@ public:
 					if (token.value.empty()) {
 						token.value = word;
 					} else {
-						token.field = word;
+						token.additionValue = word;
 					}
 				}
 			}

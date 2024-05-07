@@ -111,7 +111,7 @@ public:
 			std::string stringPath = path.string();
 			std::string cdCommand = "cd " + stringPath + "&&";
 
-			std::string createCommand = "dotnet new console -n " + node->token.value + "&&";
+			std::string createCommand = "dotnet new " + node->token.additionValue + " -n " + node->token.value + "&&";
 
 			std::string fileName = node->token.value + ".csproj";
 			std::string addCommand = "dotnet sln add ./" + node->token.value + "/" + fileName;
@@ -206,13 +206,13 @@ public:
 				std::string dataType = dataTypeToCSharpString(node);
 
 				if (node->token.scope == Private) {
-					file << "\t\tprivate " + dataType + ' ' + node->token.value + " { get => " + node->token.field + "; set => " + node->token.field + " = value; }\n";
+					file << "\t\tprivate " + dataType + ' ' + node->token.value + " { get => " + node->token.additionValue + "; set => " + node->token.additionValue + " = value; }\n";
 				}
 				else if (node->token.scope == Protected) {
-					file << "\t\tprotected " + dataType + ' ' + node->token.value + " { get => " + node->token.field + "; set => " + node->token.field + " = value; }\n";
+					file << "\t\tprotected " + dataType + ' ' + node->token.value + " { get => " + node->token.additionValue + "; set => " + node->token.additionValue + " = value; }\n";
 				}
 				else if (node->token.scope == Public) {
-					file << "\t\tpublic " + dataType + ' ' + node->token.value + " { get => " + node->token.field + "; set => " + node->token.field + " = value; }\n";
+					file << "\t\tpublic " + dataType + ' ' + node->token.value + " { get => " + node->token.additionValue + "; set => " + node->token.additionValue + " = value; }\n";
 				}
 			}
 		} else if (node->type == Constructor) {

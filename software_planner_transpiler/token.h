@@ -9,7 +9,7 @@
 
 struct Token {
 	TokenDataType dataType;
-	std::string field;
+	std::string additionValue;
 	TokenModifier modifier;
 	TokenScope scope;
 	std::uint8_t tabs;
