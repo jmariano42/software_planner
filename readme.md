@@ -4,6 +4,10 @@
 
 This is an application that will allow users to easily design and generate software application skeletons. It will be built off of a DSL that will allow generation without the use of the UI if desired by the user.
 
+## NOTE
+
+Current only C# functionality has been implemented.
+
 ## Software Planner Transpiler
 
 ### Goal
